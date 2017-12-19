@@ -2,8 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 class URL(models.Model):
-    url_long = models.URLField(unique=True)
-    url_short = models.URLField(unique=True)
+    url_long = models.URLField(unique=True, max_length=2000)
+    url_short = models.URLField(unique=True, max_length=2000)
     created_date = models.DateTimeField(default=timezone.now)
     nickname = models.CharField(max_length=200, blank=True, null=True)
     redirect_number = models.IntegerField(default=0)

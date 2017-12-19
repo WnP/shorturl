@@ -1,32 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from hashlib import blake2s
-# from os import urandom
-from time import time
 
 from .models import URL
 from .forms import URLForm
 
+# import pdb
 
-def random_url(*args, **kwargs):
-    url_long = kwargs.get('url_long').encode()
-    now = str(int(time()))[-8:].encode()
-
-    return blake2s(key=url_long, digest_size=4, salt=now).hexdigest()
+#
+# def random_url(*args, **kwargs):
+#     url_long = kwargs.get('url_long').encode()
+#     now = str(int(time()))[-8:].encode()
+#
+#     return blake2s(key=url_long, digest_size=4, salt=now).hexdigest()
 
 
 def create_short_url(request):
     form = URLForm(request.POST)
+    # pdb.set_trace()
     if form.is_valid():
-        form = form.save(commit=False)
-
-        created = False
-        while not created:
-            form.url_short = random_url(url_long=form.url_long)
-            obj, created = URL.objects.get_or_create(url_long=form.url_long,
-                                                     url_short=form.url_short,
-                                                     created_date=form.created_date,
-                                                     nickname=form.nickname,
-                                                    )
+        form.save()
 
         return redirect('url_list')
 
