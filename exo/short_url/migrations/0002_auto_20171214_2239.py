@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shortUrl', '0001_initial'),
+        ('short_url', '0001_initial'),
     ]
 
     operations = [
