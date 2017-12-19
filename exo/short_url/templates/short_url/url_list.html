@@ -1,0 +1,24 @@
+{% extends 'short_url/base.html' %}
+
+{% block content %}
+  {% for url in urls %}
+  <div class="">
+    <!-- <h1><a href="{% url 'redirect_to_long_url' pk=url.pk %}">{{ url.url_short }}</a></h1> -->
+    <h1><a href="{% url 'redirect_to_long_url' pk=url.pk %}">{{ url.url_short }}</a></h1>
+    <div class="url_long">
+      {{ url.url_long }}
+    </div>
+    <div class="date">
+      {{ url.created_date }}
+    </div>
+    <div class="number">
+      {{ url.redirect_number }}
+    </div>
+    {% if url.nickname %}
+      <div class="nickname">
+        {{ url.nickname }}
+      </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% endblock %}
