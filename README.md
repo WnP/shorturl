@@ -1,4 +1,4 @@
-# short_url
+# shorturl
 
 Enter a very long url and it give you a short url.
 It is a django project for training me
