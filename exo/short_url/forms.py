@@ -4,8 +4,6 @@ from hashlib import blake2b
 
 from .models import URL
 
-import pdb
-
 
 def random_url(*args, **kwargs):
     url_long = kwargs.get('url_long').encode()
@@ -20,7 +18,6 @@ class URLForm(forms.ModelForm):
         fields = ('url_long', 'nickname')
 
     def save(self, *args, **kwargs):
-        # pdb.set_trace()
         created = False
 
         while not created:
@@ -31,9 +28,6 @@ class URLForm(forms.ModelForm):
                 url_long=self.__dict__['cleaned_data']['url_long'],
                 nickname=self.__dict__['cleaned_data']['nickname'],
                 url_short=url_short,
-                # created_date=self.__dict__['cleaned_data'][created_date],
             )
 
-        # self.model(**self.cleaned_data).save()
-        # print(self)
         return
