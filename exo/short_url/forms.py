@@ -22,11 +22,11 @@ class URLForm(forms.ModelForm):
 
         while not created:
             url_short = random_url(
-                url_long=self.__dict__['cleaned_data']['url_long']
+                url_long=self.cleaned_data.get('url_long')
             )
             obj, created = URL.objects.get_or_create(
-                url_long=self.__dict__['cleaned_data']['url_long'],
-                nickname=self.__dict__['cleaned_data']['nickname'],
+                url_long=self.cleaned_data.get('url_long'),
+                nickname=self.cleaned_data.get('nickname'),
                 url_short=url_short,
             )
 
