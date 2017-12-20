@@ -1,8 +1,5 @@
 from django.test import TestCase
 
-# from django.core.exceptions.ObjectDoesNotExist import DoesNotExist
-from django.core.exceptions import ObjectDoesNotExist
-
 from .models import URL
 from .forms import URLForm
 
@@ -25,14 +22,11 @@ class URLTests(TestCase):
         form.is_valid()
         form.save()
         duplicate = URLForm(data={'url_long': "http://www.conchita.com"})
-        print("Is valid: {}".format(duplicate.is_valid()))
-        # self.assertRaises(URL.DoesNotExist, duplicate.save)
-        # self.assertRaises(URL.DoesNotExist, form.save, **{'url_long': "http://www.conchita.com"})
-        # self.assertRaises(ObjectDoesNotExist, {'url_long': "http://www.conchita.com"})
-        # try:
-        #     form.save()
-        # except(ObjectDoesNotExist):
-        #     print("coin")
+        self.assertFalse(duplicate.is_valid())
+
+        # J'aurai pu faire ceci (même si c'est moins bien)
+        # from django.db.utils import IntegrityError
+        # self.assertRaises(IntegrityError, form.save)
 
     def test_URLForm_is_valid(self):
         """
