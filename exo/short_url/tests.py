@@ -11,7 +11,7 @@ from .models import URL
 
 # Écrire un test qui crée un enregistrement
 class URLTests(TestCase):
-    def create_an_entry(self):
+    def test_create_an_entry(self):
         """
         Create an entry in the db and test if it exists
         """
