@@ -1,16 +1,12 @@
 from django.test import TestCase
 
+# from django.core.exceptions.ObjectDoesNotExist import DoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import URL
 from .forms import URLForm
 
-# Créer une url avec un racourci
-# Si url_long existe déjà
-# Si url_short existe déjà
 
-# Faire plusieurs insert dans la db et vérifier que j'ai bien la liste
-
-
-# Écrire un test qui crée un enregistrement
 class URLTests(TestCase):
     def test_create_an_entry(self):
         """
@@ -20,6 +16,23 @@ class URLTests(TestCase):
         new_url.save()
         url_in_db = URL.objects.get(url_long="www.google.fr")
         self.assertEqual(new_url, url_in_db)
+
+    def test_create_duplicate_entry(self):
+        """
+        Create a duplicate entry
+        """
+        form = URLForm(data={'url_long': "http://www.conchita.com"})
+        form.is_valid()
+        form.save()
+        duplicate = URLForm(data={'url_long': "http://www.conchita.com"})
+        print("Is valid: {}".format(duplicate.is_valid()))
+        # self.assertRaises(URL.DoesNotExist, duplicate.save)
+        # self.assertRaises(URL.DoesNotExist, form.save, **{'url_long': "http://www.conchita.com"})
+        # self.assertRaises(ObjectDoesNotExist, {'url_long': "http://www.conchita.com"})
+        # try:
+        #     form.save()
+        # except(ObjectDoesNotExist):
+        #     print("coin")
 
     def test_URLForm_is_valid(self):
         """
