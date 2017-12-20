@@ -5,6 +5,9 @@ db.sqlite3
 venv/
 .venv/
 ENV/
+htmlcov/
+.coverage
+
 [Bb]in
 [Ii]nclude
 [Ll]ib
