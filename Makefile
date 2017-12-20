@@ -13,3 +13,6 @@ superuser:
 
 init:
 	venv migrate superuser run
+
+test:
+	./venv/bin/python ./exo/manage.py test short_url
