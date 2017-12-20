@@ -11,8 +11,7 @@ run:
 superuser:
 	./venv/bin/python ./exo/manage.py createsuperuser
 
-init:
-	venv migrate superuser run
+init: venv migrate superuser run
 
 version:
 	./venv/bin/python ./exo/manage.py version
