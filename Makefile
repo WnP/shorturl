@@ -14,5 +14,13 @@ superuser:
 init:
 	venv migrate superuser run
 
+version:
+	./venv/bin/python ./exo/manage.py version
+
 test:
 	./venv/bin/python ./exo/manage.py test short_url
+
+coverage:
+	./venv/bin/coverage run --source='./exo' ./exo/manage.py test short_url
+	./venv/bin/coverage html
+	xdg-open htmlcov/index.html&
