@@ -1,10 +1,12 @@
 from django.test import TestCase
+from django.urls import reverse
 
 from .models import URL
 from .forms import URLForm
 
 
-class URLTests(TestCase):
+class URLFormTests(TestCase):
+    # Useless test for duplicate entry
     def test_create_an_entry(self):
         """
         Create an entry in the db and test if it exists
@@ -13,6 +15,7 @@ class URLTests(TestCase):
         new_url.save()
         url_in_db = URL.objects.get(url_long="www.google.fr")
         self.assertEqual(new_url, url_in_db)
+
 
     def test_create_duplicate_entry(self):
         """
@@ -28,6 +31,7 @@ class URLTests(TestCase):
         # from django.db.utils import IntegrityError
         # self.assertRaises(IntegrityError, form.save)
 
+
     def test_URLForm_is_valid(self):
         """
         Test if URLForm is valid with valid entry
@@ -35,12 +39,14 @@ class URLTests(TestCase):
         form = URLForm(data={'url_long': "http://www.caramail.com"})
         self.assertTrue(form.is_valid())
 
+
     def test_URLForm_is_invalid(self):
         """
         Test if URLForm is invalid with invalid entry
         """
         form = URLForm(data={'url_long': ""})
         self.assertFalse(form.is_valid())
+
 
     def test_create_an_entry_with_URLForm(self):
         """
@@ -54,3 +60,108 @@ class URLTests(TestCase):
         self.assertEqual(url_in_db.url_long, "http://www.google.fr")
         self.assertIsNone(url_in_db.nickname)
         self.assertIsNotNone(url_in_db.url_short)
+
+
+#
+
+
+def create_new_url(url, nickname):
+    """
+    Create a new url in database with or without nickname
+    """
+    form = URLForm(data={'url_long': url, 'nickname': nickname})
+    form.is_valid()
+    form.save()
+    # return URL.objects.create(url_long=url, nickname=nickname)
+
+
+class URLFormViewTests(TestCase):
+    def test_get_form_create_short_url(self):
+        """
+        Test if form page existed.
+        """
+        response = self.client.get(reverse('create_short_url'))
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_redirect_to_url_list_after_create_a_valid_url(self):
+        """
+        Create an entry and check if redirect on url_list view
+        """
+
+        form = URLForm(data={'url_long': "http://www.perdu.com"})
+
+        response = self.client.post(
+            reverse('create_short_url'),
+            {'form': form},
+        )
+        # print(response.context)
+        response = self.client.get(reverse('url_list'))
+        print(response.context['urls'])
+
+
+#
+
+
+class URLListViewTests(TestCase):
+    def test_get_url_list(self):
+        """
+        Test if url_list page existed and if there are no url, displayed an
+        appropriate message.
+        """
+        response = self.client.get(reverse('url_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No url are available.")
+        self.assertQuerysetEqual(response.context['urls'], [])
+
+
+    def test_url_without_nickname(self):
+        """
+        Create an url without a nickname
+        """
+        create_new_url(url="http://www.perdu.com", nickname="")
+        response = self.client.get(reverse('url_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context['urls'],
+                                 ['<URL: http://www.perdu.com>'])
+        for url in response.context['urls']:
+            self.assertEqual(url.nickname, None)
+
+
+    def test_url_with_nickname(self):
+        """
+        Create an url with a nickname
+        """
+        create_new_url(url="http://www.django.org", nickname="django")
+        response = self.client.get(reverse('url_list'))
+        self.assertEqual(response.status_code, 200)
+        for url in response.context['urls']:
+            self.assertEqual(url.nickname, "django")
+
+
+    def test_get_two_past_url(self):
+        """
+        Create 2 urls
+        """
+        create_new_url(url="http://www.perdu.com", nickname="")
+        create_new_url(url="http://www.djangoproject.com", nickname="django")
+        response = self.client.get(reverse('url_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(
+            response.context['urls'],
+            [
+                '<URL: http://www.perdu.com>',
+                '<URL: http://www.djangoproject.com>'
+            ]
+        )
+
+    def test_redirect_number(self):
+        """
+        Create an url, redirect and test if url.redirect_number == 1
+        """
+        create_new_url(url="http://www.perdu.com", nickname="")
+        response = self.client.get(reverse('url_list'))
+        url = response.context['urls'][0]
+        self.client.get(reverse('redirect_to_long_url', args=(url.pk,)))
+        url = URL.objects.get(pk=url.pk)
+        self.assertEqual(url.redirect_number, 1)
