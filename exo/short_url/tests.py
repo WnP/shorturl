@@ -88,16 +88,19 @@ class URLFormViewTests(TestCase):
         """
         Create an entry and check if redirect on url_list view
         """
-
-        form = URLForm(data={'url_long': "http://www.perdu.com"})
-
         response = self.client.post(
             reverse('create_short_url'),
-            {'form': form},
+            {
+                'url_long': "http://www.caramail.com",
+                'nickname': '',
+            }
         )
         # print(response.context)
+        self.assertEqual(response.status_code, 302)
         response = self.client.get(reverse('url_list'))
         print(response.context['urls'])
+        self.assertQuerysetEqual(response.context['urls'],
+                                 ['<URL: http://www.caramail.com>'])
 
 
 #
