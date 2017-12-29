@@ -4,6 +4,8 @@ from django.urls import reverse
 from .models import URL
 from .forms import URLForm
 
+import pdb
+
 
 class URLFormTests(TestCase):
     # Useless test for duplicate entry
@@ -54,6 +56,7 @@ class URLFormTests(TestCase):
         with original
         """
         form = URLForm(data={'url_long': "http://www.google.fr"})
+
         form.is_valid()
         form.save()
         url_in_db = URL.objects.get(url_long="http://www.google.fr")
@@ -62,7 +65,25 @@ class URLFormTests(TestCase):
         self.assertIsNotNone(url_in_db.url_short)
 
 
-#
+
+    def test_hash_collision(self):
+        """
+        Create 2 entries in the db with the same hash. Verify if django raise an
+        exception and load short_url/error.html template with error on the web
+        page
+        """
+        url = "http://www.perdu.com"
+        nickname = ""
+        # pdb.set_trace()
+
+        form = URLForm(data={'url_long': url, 'nickname': nickname})
+        if form.is_valid():
+            form.set
+            test = form.save(commit=False)
+            test.url_short = 'auie'
+            print(test)
+            test.save()
+
 
 
 def create_new_url(url, nickname):
@@ -95,10 +116,8 @@ class URLFormViewTests(TestCase):
                 'nickname': '',
             }
         )
-        # print(response.context)
         self.assertEqual(response.status_code, 302)
         response = self.client.get(reverse('url_list'))
-        print(response.context['urls'])
         self.assertQuerysetEqual(response.context['urls'],
                                  ['<URL: http://www.caramail.com>'])
 

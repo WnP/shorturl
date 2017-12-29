@@ -1,27 +1,32 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ValidationError
 
 from .models import URL
 from .forms import URLForm
 
 # import pdb
 
-#
-# def random_url(*args, **kwargs):
-#     url_long = kwargs.get('url_long').encode()
-#     now = str(int(time()))[-8:].encode()
-#
-#     return blake2s(key=url_long, digest_size=4, salt=now).hexdigest()
-
 
 def create_short_url(request):
     form = URLForm(request.POST)
     # pdb.set_trace()
     if form.is_valid():
-        form.save()
+        try:
+            form.save()
+        except ValidationError as e:
+            return render(request,
+                          'short_url/create_error.html',
+                          {'error': e.strerror},
+                         )
 
-        return redirect('url_list')
+        else:
+            return redirect('url_list')
 
     return render(request, 'short_url/create_short_url.html', {'form': form})
+
+
+def create_error(request):
+    return render(request, 'short_url/create_error.html')
 
 
 def redirect_to_long_url(request, pk):
