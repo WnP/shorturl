@@ -1,5 +1,5 @@
 from django import forms
-from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from time import time
 from hashlib import blake2b
 
@@ -21,7 +21,6 @@ def get_hash(*args, **kwargs):
     else:
         return blake2b(key=url_long[:64], digest_size=4).hexdigest()
 
-import pdb
 
 class URLForm(forms.ModelForm):
     class Meta:
@@ -29,39 +28,19 @@ class URLForm(forms.ModelForm):
         fields = ('url_long', 'nickname')
 
     def save(self, *args, **kwargs):
-        for i in range(4):
-            # pdb.set_trace()
+        url_long = self.cleaned_data.get('url_long')
 
-            url_short = get_hash(url_long=self.cleaned_data.get('url_long'))
-            _, created = URL.objects.get_or_create(
+        try:
+            url_short = get_hash(url_long=url_long)
+            URL.objects.get_or_create(
                 url_long=self.cleaned_data.get('url_long'),
                 nickname=self.cleaned_data.get('nickname'),
                 url_short=url_short,
             )
-            if created:
-                return
-        else:
-            raise forms.ValidationError(_('Unable to create an short url'))
-
-
-    # def save_bis(self, *args, **kwargs):
-    #     url_short = get_hash(url_long=self.cleaned_data.get('url_long'))
-    #     _, created = URL.objects.get_or_create(
-    #         url_long=self.cleaned_data.get('url_long'),
-    #         nickname=self.cleaned_data.get('nickname'),
-    #         url_short=url_short,
-    #     )
-    #     if created:
-    #         return
-    #
-    #     url_short = get_hash(url_long=self.cleaned_data.get('url_long'),
-    #                          rand=True,)
-    #     _, created = URL.objects.get_or_create(
-    #         url_long=self.cleaned_data.get('url_long'),
-    #         nickname=self.cleaned_data.get('nickname'),
-    #         url_short=url_short,
-    #     )
-    #     if created:
-    #         return
-    #
-    #     raise forms.ValidationError(_('Unable to create an short url'))
+        except IntegrityError:
+            url_short = get_hash(url_long=url_long, rand=True)
+            URL.objects.get_or_create(
+                url_long=self.cleaned_data.get('url_long'),
+                nickname=self.cleaned_data.get('nickname'),
+                url_short=url_short,
+            )
