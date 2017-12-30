@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.db import IntegrityError
 from django.urls import reverse
 
 from .models import URL
@@ -78,6 +79,24 @@ class URLFormTests(TestCase):
             form.save()
             # and we should have 2 entries in database
             self.assertEqual(URL.objects.all().count(), 2)
+
+    def test_real_collision(self):
+        # now we use an explicite fake hash
+        fake_hash = 'fake_hash'
+        # create an url with this hash
+        URL(url_long="http://www.lost.com", url_short=fake_hash).save()
+
+        # now we use the form with another url but with an hash function
+        # which always return this fake hash
+        form = URLForm(
+            data={'url_long': 'http://www.google.com'},
+            hash_func=lambda *args, **kwargs: fake_hash)
+
+        if form.is_valid():
+            # so this should raise an IntegrityError
+            self.assertRaises(IntegrityError, form.save)
+            # and we should have 1 entries in database
+            self.assertEqual(URL.objects.all().count(), 1)
 
 
 def create_new_url(url, nickname):

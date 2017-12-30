@@ -26,7 +26,7 @@ class URLForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # overloading init method to be able to set a custom hash func
         # useful for testing
-        self.get_hash = kwargs.get('hash_func', get_hash)
+        self.get_hash = kwargs.pop('hash_func', get_hash)
         return super().__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
