@@ -4,8 +4,6 @@ from django.urls import reverse
 from .models import URL
 from .forms import URLForm
 
-import pdb
-
 
 class URLFormTests(TestCase):
     # Useless test for duplicate entry
@@ -17,7 +15,6 @@ class URLFormTests(TestCase):
         new_url.save()
         url_in_db = URL.objects.get(url_long="www.google.fr")
         self.assertEqual(new_url, url_in_db)
-
 
     def test_create_duplicate_entry(self):
         """
@@ -33,7 +30,6 @@ class URLFormTests(TestCase):
         # from django.db.utils import IntegrityError
         # self.assertRaises(IntegrityError, form.save)
 
-
     def test_URLForm_is_valid(self):
         """
         Test if URLForm is valid with valid entry
@@ -41,14 +37,12 @@ class URLFormTests(TestCase):
         form = URLForm(data={'url_long': "http://www.caramail.com"})
         self.assertTrue(form.is_valid())
 
-
     def test_URLForm_is_invalid(self):
         """
         Test if URLForm is invalid with invalid entry
         """
         form = URLForm(data={'url_long': ""})
         self.assertFalse(form.is_valid())
-
 
     def test_create_an_entry_with_URLForm(self):
         """
@@ -63,8 +57,6 @@ class URLFormTests(TestCase):
         self.assertEqual(url_in_db.url_long, "http://www.google.fr")
         self.assertIsNone(url_in_db.nickname)
         self.assertIsNotNone(url_in_db.url_short)
-
-
 
     def test_hash_collision(self):
         """
@@ -85,7 +77,6 @@ class URLFormTests(TestCase):
             test.save()
 
 
-
 def create_new_url(url, nickname):
     """
     Create a new url in database with or without nickname
@@ -104,7 +95,6 @@ class URLFormViewTests(TestCase):
         response = self.client.get(reverse('create_short_url'))
         self.assertEqual(response.status_code, 200)
 
-
     def test_redirect_to_url_list_after_create_a_valid_url(self):
         """
         Create an entry and check if redirect on url_list view
@@ -122,10 +112,8 @@ class URLFormViewTests(TestCase):
                                  ['<URL: http://www.caramail.com>'])
 
 
-#
-
-
 class URLListViewTests(TestCase):
+
     def test_get_url_list(self):
         """
         Test if url_list page existed and if there are no url, displayed an
@@ -135,7 +123,6 @@ class URLListViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No url are available.")
         self.assertQuerysetEqual(response.context['urls'], [])
-
 
     def test_url_without_nickname(self):
         """
@@ -149,7 +136,6 @@ class URLListViewTests(TestCase):
         for url in response.context['urls']:
             self.assertEqual(url.nickname, None)
 
-
     def test_url_with_nickname(self):
         """
         Create an url with a nickname
@@ -159,7 +145,6 @@ class URLListViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         for url in response.context['urls']:
             self.assertEqual(url.nickname, "django")
-
 
     def test_get_two_past_url(self):
         """
