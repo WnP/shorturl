@@ -13,13 +13,9 @@ def get_hash(*args, **kwargs):
     It return a hash string
     """
     url_long = kwargs.get('url_long').encode()
-    rand = kwargs.get('rand', False)
+    salt = kwargs.get('rand', False) and str(int(time()))[-8:].encode() or b''
 
-    if rand:
-        now = str(int(time()))[-8:].encode()
-        return blake2b(key=url_long[:64], digest_size=4, salt=now).hexdigest()
-    else:
-        return blake2b(key=url_long[:64], digest_size=4).hexdigest()
+    return blake2b(key=url_long[:64], digest_size=4, salt=salt).hexdigest()
 
 
 class URLForm(forms.ModelForm):
