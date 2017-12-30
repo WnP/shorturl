@@ -1,25 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from .models import URL
 from .forms import URLForm
 
-# import pdb
-
 
 def create_short_url(request):
-    form = URLForm(request.POST)
-    # pdb.set_trace()
-    if form.is_valid():
-        try:
-            form.save()
-        except ValidationError as e:
-            return render(request,
-                          'short_url/create_error.html',
-                          {'error': e.strerror},
-                         )
-
-        else:
+    form = URLForm()
+    if request.method == "POST":
+        form = URLForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except IntegrityError as e:
+                return render(
+                    request, 'short_url/create_error.html',
+                    {'error': e.strerror})
             return redirect('url_list')
 
     return render(request, 'short_url/create_short_url.html', {'form': form})
