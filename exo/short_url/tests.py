@@ -75,7 +75,7 @@ class URLFormTests(TestCase):
         form = URLForm(data={'url_long': url})
         if form.is_valid():
             # so this should not raise an IntegrityError
-            form.save(commit=False)
+            form.save()
             # and we should have 2 entries in database
             self.assertEqual(URL.objects.all().count(), 2)
 
