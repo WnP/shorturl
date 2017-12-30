@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import URL
-from .forms import URLForm
+from .forms import URLForm, get_hash
 
 
 class URLFormTests(TestCase):
@@ -64,17 +64,20 @@ class URLFormTests(TestCase):
         exception and load short_url/error.html template with error on the web
         page
         """
-        url = "http://www.perdu.com"
-        nickname = ""
-        # pdb.set_trace()
+        # hash is computed against 'google.com'
+        url = "http://www.google.com"
+        h = get_hash(url_long=url)
+        # but entry use another url
+        URL(url_long="http://www.lost.com", url_short=h).save()
 
-        form = URLForm(data={'url_long': url, 'nickname': nickname})
+        # so creating an URL object using first url should return
+        # the same hash
+        form = URLForm(data={'url_long': url})
         if form.is_valid():
-            form.set
-            test = form.save(commit=False)
-            test.url_short = 'auie'
-            print(test)
-            test.save()
+            # so this should not raise an IntegrityError
+            form.save(commit=False)
+            # and we should have 2 entries in database
+            self.assertEqual(URL.objects.all().count(), 2)
 
 
 def create_new_url(url, nickname):
