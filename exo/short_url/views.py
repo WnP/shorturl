@@ -10,13 +10,22 @@ def create_short_url(request):
     if request.method == "POST":
         form = URLForm(request.POST)
         if form.is_valid():
-            try:
-                form.save()
-            except IntegrityError as e:
+            obj = form.save()
+            if obj:
                 return render(
-                    request, 'short_url/create_error.html',
-                    {'error': e.strerror})
-            return redirect('url_list')
+                    request,
+                    'short_url/url_list.html',
+                    {'urls': {obj}}
+                )
+            else:
+                return render(
+                    request,
+                    'short_url/create_error.html',
+                    {
+                        'error':
+                        "We can't create a short url. Please try in few minutes"
+                    }
+                )
 
     return render(request, 'short_url/create_short_url.html', {'form': form})
 

@@ -34,15 +34,17 @@ class URLForm(forms.ModelForm):
 
         try:
             url_short = self.get_hash(url_long=url_long)
-            URL.objects.get_or_create(
+            url, _ = URL.objects.get_or_create(
                 url_long=self.cleaned_data.get('url_long'),
                 nickname=self.cleaned_data.get('nickname'),
                 url_short=url_short,
             )
+            return None
         except IntegrityError:
             url_short = self.get_hash(url_long=url_long, rand=True)
-            URL.objects.get_or_create(
+            url, _ = URL.objects.get_or_create(
                 url_long=self.cleaned_data.get('url_long'),
                 nickname=self.cleaned_data.get('nickname'),
                 url_short=url_short,
             )
+            return url
