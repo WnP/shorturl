@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db import IntegrityError
 
 from .models import URL
 from .forms import URLForm
