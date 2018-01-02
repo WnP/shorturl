@@ -61,9 +61,9 @@ class URLFormTests(TestCase):
 
     def test_hash_collision(self):
         """
-        Create 2 entries in the db with the same hash. Verify if django raise an
-        exception and load short_url/error.html template with error on the web
-        page
+        Create 2 entries in the db with the same hash. Verify if django raise
+        an exception and load short_url/error.html template with error on the
+        web page
         """
         # hash is computed against 'google.com'
         url = "http://www.google.com"
@@ -106,7 +106,6 @@ def create_new_url(url, nickname):
     form = URLForm(data={'url_long': url, 'nickname': nickname})
     form.is_valid()
     form.save()
-    # return URL.objects.create(url_long=url, nickname=nickname)
 
 
 class URLFormViewTests(TestCase):
@@ -128,14 +127,13 @@ class URLFormViewTests(TestCase):
                 'nickname': '',
             }
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get(reverse('url_list'))
         self.assertQuerysetEqual(response.context['urls'],
                                  ['<URL: http://www.caramail.com>'])
 
 
 class URLListViewTests(TestCase):
-
     def test_get_url_list(self):
         """
         Test if url_list page existed and if there are no url, displayed an
@@ -172,8 +170,8 @@ class URLListViewTests(TestCase):
         """
         Create 2 urls
         """
-        create_new_url(url="http://www.perdu.com", nickname="")
         create_new_url(url="http://www.djangoproject.com", nickname="django")
+        create_new_url(url="http://www.perdu.com", nickname="")
         response = self.client.get(reverse('url_list'))
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(
