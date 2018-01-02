@@ -19,10 +19,6 @@ def create_short_url(request):
     return render(request, 'short_url/create_short_url.html', {'form': form})
 
 
-def create_error(request):
-    return render(request, 'short_url/create_error.html')
-
-
 def redirect_to_long_url(request, pk):
     url = get_object_or_404(URL, pk=pk)
     url.redirect_number += 1
