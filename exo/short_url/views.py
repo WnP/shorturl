@@ -28,6 +28,7 @@ def redirect_to_long_url(request, pk):
 
 
 def url_list(request):
-    urls = URL.objects.all().order_by('created_date')
 
-    return render(request, 'short_url/url_list.html', {'urls': urls})
+    return render(request, 'short_url/url_list.html', {
+        'urls': URL.objects.all()
+    })
