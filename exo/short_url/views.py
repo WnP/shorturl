@@ -10,24 +10,13 @@ def create_short_url(request):
         form = URLForm(request.POST)
         if form.is_valid():
             obj = form.save()
-            if obj is None:
-                return render(request, 'short_url/url_list.html', {
-                    'error': True,
-                })
-            else:
-                urls = URL.objects.all().order_by('created_date')[1:]
-
-                return render(request, 'short_url/url_list.html', {
-                    'latest': obj,
-                    'urls': urls,
-                    'error': False,
-                })
+            return render(request, 'short_url/url_list.html', {
+                'error': obj is None,
+                'latest': obj,
+                'urls': URL.objects.all().exclude(pk=obj.pk)
+            })
 
     return render(request, 'short_url/create_short_url.html', {'form': form})
-
-
-def create_error(request):
-    return render(request, 'short_url/create_error.html')
 
 
 def redirect_to_long_url(request, pk):
@@ -39,6 +28,7 @@ def redirect_to_long_url(request, pk):
 
 
 def url_list(request):
-    urls = URL.objects.all().order_by('created_date')
 
-    return render(request, 'short_url/url_list.html', {'urls': urls})
+    return render(request, 'short_url/url_list.html', {
+        'urls': URL.objects.all()
+    })
