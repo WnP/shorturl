@@ -10,21 +10,18 @@ def create_short_url(request):
         form = URLForm(request.POST)
         if form.is_valid():
             obj = form.save()
-            if obj:
-                return render(
-                    request,
-                    'short_url/url_list.html',
-                    {'urls': {obj}}
-                )
+            if obj is None:
+                return render(request, 'short_url/url_list.html', {
+                    'error': True,
+                })
             else:
-                return render(
-                    request,
-                    'short_url/create_error.html',
-                    {
-                        'error':
-                        "We can't create a short url. Please try in few minutes"
-                    }
-                )
+                urls = URL.objects.all().order_by('created_date')[1:]
+
+                return render(request, 'short_url/url_list.html', {
+                    'latest': obj,
+                    'urls': urls,
+                    'error': False,
+                })
 
     return render(request, 'short_url/create_short_url.html', {'form': form})
 

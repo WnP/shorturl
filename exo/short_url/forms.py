@@ -39,7 +39,7 @@ class URLForm(forms.ModelForm):
                 nickname=self.cleaned_data.get('nickname'),
                 url_short=url_short,
             )
-            return None
+            return url
         except IntegrityError:
             url_short = self.get_hash(url_long=url_long, rand=True)
             url, _ = URL.objects.get_or_create(
