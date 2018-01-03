@@ -26,7 +26,7 @@
       </div>
     {% endif %}
     {% for url in urls %}
-      <h2><a href="{% url 'redirect_to_long_url' pk=url.pk %}">{{ url.url_short }}</a></h2>
+      <h4><a href="{% url 'redirect_to_long_url' pk=url.pk %}">{{ url.url_short }}</a></h4>
       <div class="url_long">
         {{ url.url_long }}
       </div>

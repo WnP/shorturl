@@ -1,22 +1,36 @@
 from django.shortcuts import render, redirect, get_object_or_404
+# from django.views.generic import ListView
+# from django.views.generic.base import RedirectView
+from django.views.generic.edit import FormView
 
 from .models import URL
 from .forms import URLForm
 
 
-def create_short_url(request):
-    form = URLForm()
-    if request.method == "POST":
-        form = URLForm(request.POST)
-        if form.is_valid():
-            obj = form.save()
-            return render(request, 'short_url/url_list.html', {
-                'error': obj is None,
-                'latest': obj,
-                'urls': URL.objects.all().exclude(pk=obj.pk)
-            })
+class CreateShortURLView(FormView):
+    form_class = URLForm
+    template_name = "short_url/create_short_url.html"
 
-    return render(request, 'short_url/create_short_url.html', {'form': form})
+    def form_valid(self, form):
+        obj = form.save()
+        return render(self.request, 'short_url/url_list.html', {
+            'error': obj is None,
+            'latest': obj,
+            'urls': URL.objects.all().exclude(pk=obj.pk)
+        })
+
+
+# class RedirectToLongURLView(RedirectView):
+#     permanent = False
+#
+#     def get_redirect_url(self, *args, **kwargs):
+#         url = get_object_or_404(URL, pk=kwargs['pk'])
+#         url.redirect_number += 1
+#         url.save()
+#         # self.kwargs['url'] = url.url_long
+#
+#         return super(RedirectToLongURLView, self).get_redirect_url(*args,
+#                                                                    **kwargs)
 
 
 def redirect_to_long_url(request, pk):
@@ -25,6 +39,16 @@ def redirect_to_long_url(request, pk):
     url.save()
 
     return redirect(url.url_long)
+
+
+# class URLList(ListView):
+#     model = URL
+#     template_name = "short_url/url_list.html"
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(URLList, self).get_context_data(**kwargs)
+#         context['error'] = …
+#         return context
 
 
 def url_list(request):
