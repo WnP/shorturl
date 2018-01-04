@@ -41,7 +41,7 @@ def redirect_to_long_url(request, pk):
     return redirect(url.url_long)
 
 
-# class URLList(ListView):
+# class URLListView(ListView):
 #     model = URL
 #     template_name = "short_url/url_list.html"
 #
