@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 
 # from django.template import Context
 
@@ -15,14 +16,17 @@ class CreateShortURLView(FormView):
     # pour créer un context
     form_class = URLForm
     template_name = "short_url/create_short_url.html"
+    success_url = reverse_lazy('url_list')
 
     def form_valid(self, form):
         obj = form.save()
-        return render(self.request, 'short_url/url_list.html', {
-            'error': obj is None,
-            'latest': obj,
-            'urls': URL.objects.all().exclude(pk=obj.pk)
-        })
+
+        return super(CreateShortURLView, self).form_valid(form)
+        # return render(self.request, 'short_url/url_list.html', {
+        #     'error': obj is None,
+        #     'latest': obj,
+        #     'urls': URL.objects.all().exclude(pk=obj.pk)
+        # })
 
 
 # class RedirectToLongURLView(RedirectView):
