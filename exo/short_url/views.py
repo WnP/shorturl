@@ -1,4 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+# from django.template import Context
+
 # from django.views.generic import ListView
 # from django.views.generic.base import RedirectView
 from django.views.generic.edit import FormView
@@ -8,6 +11,8 @@ from .forms import URLForm
 
 
 class CreateShortURLView(FormView):
+    # Voir https://hellowebbooks.com/news/introduction-to-class-based-views/
+    # pour créer un context
     form_class = URLForm
     template_name = "short_url/create_short_url.html"
 
