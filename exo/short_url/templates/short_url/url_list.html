@@ -6,23 +6,11 @@
       Sorry but we can't create your short url. Please try in few minutes
     </div>
   {% else %}
-    {% if latest %}
-      <div class="latest">
-        <h1><a href="{% url 'redirect_to_long_url' pk=latest.pk %}">{{ latest.url_short }}</a></h1>
-        <div class="url_long">
-          {{ latest.url_long }}
-        </div>
-        <div class="date">
-          {{ latest.created_date }}
-        </div>
-        <div class="number">
-          {{ latest.redirect_number }}
-        </div>
-        {% if url.nickname %}
-          <div class="nickname">
-            {{ latest.nickname }}
-          </div>
-        {% endif %}
+    {% if messages %}
+      <div class="message">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
       </div>
     {% endif %}
     {% for url in urls %}
