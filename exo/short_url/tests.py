@@ -127,7 +127,7 @@ class URLFormViewTests(TestCase):
                 'nickname': '',
             }
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         response = self.client.get(reverse('url_list'))
         self.assertQuerysetEqual(response.context['urls'],
                                  ['<URL: http://www.caramail.com>'])
