@@ -1,8 +1,5 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-# from django.shortcuts import render, redirect, get_object_or_404
-
-# from django.template import Context
 
 from django.views.generic import ListView
 from django.views.generic.base import RedirectView
@@ -53,19 +50,8 @@ class RedirectToLongURLView(RedirectView):
         url = get_object_or_404(URL, pk=kwargs['pk'])
         url.redirect_number += 1
         url.save()
-        # self.kwargs['URL'] = url.url_long
 
-        # return super(RedirectToLongURLView, self).get_redirect_url(*args,
-        #                                                            **kwargs)
         return url.url_long
-
-
-# def redirect_to_long_url(request, pk):
-#     url = get_object_or_404(URL, pk=pk)
-#     url.redirect_number += 1
-#     url.save()
-#
-#     return redirect(url.url_long)
 
 
 class URLListView(ListView):
