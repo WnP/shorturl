@@ -1,11 +1,11 @@
-from django.shortcuts import redirect, get_object_or_404
-# from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
+# from django.shortcuts import render, redirect, get_object_or_404
 
 # from django.template import Context
 
 from django.views.generic import ListView
-# from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView
 from django.views.generic.edit import FormView
 from django.contrib import messages
 
@@ -30,51 +30,42 @@ class CreateShortURLView(FormView):
 
         self.last_created_id = obj.id
 
-        message = '<h1><a href="{1}">{1}</a></h1>' + \
-            '<div class="{2}">' + \
-            '{2}' + \
-            '</div>' + \
-            '<div class="{3}">' + \
-            '{3}' + \
-            '</div>' + \
-            '<div class="{4}">' + \
-            '{4}' + \
-            '</div>' + \
-            '<div class="{5}">' + \
-            '{5}' + \
-            '</div>' + \
-            ''.format(obj.url_short,
-                      obj.url_long,
-                      obj.created_date,
-                      obj.redirect_number)
+        message = '<h1><a href="{}">{}</a></h1>' \
+            '<div class="url_long">' \
+            '{}' \
+            '</div>' \
+            ''.format(obj.id,
+                      obj.url_short,
+                      obj.url_long,)
         if obj.nickname is not None:
-            message += '<div class="{1}">' + \
-                '{1}' + \
+            message += '<div class="{1}">' \
+                '{1}' \
                 '</div>'.format(obj.nickname)
         messages.info(self.request, message)
 
         return super(CreateShortURLView, self).form_valid(form)
 
 
-# class RedirectToLongURLView(RedirectView):
-#     permanent = False
+class RedirectToLongURLView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        url = get_object_or_404(URL, pk=kwargs['pk'])
+        url.redirect_number += 1
+        url.save()
+        # self.kwargs['URL'] = url.url_long
+
+        # return super(RedirectToLongURLView, self).get_redirect_url(*args,
+        #                                                            **kwargs)
+        return url.url_long
+
+
+# def redirect_to_long_url(request, pk):
+#     url = get_object_or_404(URL, pk=pk)
+#     url.redirect_number += 1
+#     url.save()
 #
-#     def get_redirect_url(self, *args, **kwargs):
-#         url = get_object_or_404(URL, pk=kwargs['pk'])
-#         url.redirect_number += 1
-#         url.save()
-#         # self.kwargs['url'] = url.url_long
-#
-#         return super(RedirectToLongURLView, self).get_redirect_url(*args,
-#                                                                    **kwargs)
-
-
-def redirect_to_long_url(request, pk):
-    url = get_object_or_404(URL, pk=pk)
-    url.redirect_number += 1
-    url.save()
-
-    return redirect(url.url_long)
+#     return redirect(url.url_long)
 
 
 class URLListView(ListView):
@@ -88,10 +79,3 @@ class URLListView(ListView):
             return URL.objects.all()
         else:
             return URL.objects.all().exclude(pk=last_created_id)
-
-
-# def url_list(request):
-#
-#     return render(request, 'short_url/url_list.html', {
-#         'urls': URL.objects.all()
-#     })
