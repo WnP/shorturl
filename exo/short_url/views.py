@@ -12,8 +12,6 @@ from django.contrib import messages
 from .models import URL
 from .forms import URLForm
 
-import pdb
-
 
 class CreateShortURLView(FormView):
     # Voir https://hellowebbooks.com/news/introduction-to-class-based-views/
@@ -22,11 +20,15 @@ class CreateShortURLView(FormView):
     template_name = "short_url/create_short_url.html"
 
     def get_success_url(self):
-        pdb.set_trace()
-        return '{}?last_id={}'.format(reverse('url_list'), self.object.pk)
+        return '{}?last_created_id={}'.format(
+            reverse('url_list'),
+            self.last_created_id
+        )
 
     def form_valid(self, form):
         obj = form.save()
+
+        self.last_created_id = obj.id
 
         message = '<h1><a href="{1}">{1}</a></h1>' + \
             '<div class="{2}">' + \
@@ -78,13 +80,14 @@ def redirect_to_long_url(request, pk):
 class URLListView(ListView):
     model = URL
     template_name = "short_url/url_list.html"
+    context_object_name = "urls"
 
     def get_queryset(self):
-        last_id = self.kwargs.get('last_id')
-        if last_id is None:
+        last_created_id = self.kwargs.get('last_created_id')
+        if last_created_id is None:
             return URL.objects.all()
         else:
-            return URL.objects.all().exclude(pk=last_id)
+            return URL.objects.all().exclude(pk=last_created_id)
 
 
 # def url_list(request):
