@@ -1,38 +1,52 @@
 {% extends 'short_url/base.html' %}
 
 {% block content %}
-  {% if error is True %}
-    <div class="">
-      Sorry but we can't create your short url. Please try in few minutes
-    </div>
-  {% else %}
-    {% if messages %}
-      <div class="message">
-        {% for message in messages %}
-          {{ message|safe }}
+  <div class="container">
+    <div class="main">
+
+      {% if error is True %}
+        <span class="alert label">
+          Sorry but we can't create your short url. Please try in few minutes
+        </span>
+      {% else %}
+        {% if messages %}
+          <div class="message">
+            {% for message in messages %}
+              {{ message|safe }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% for url in urls %}
+          <div class="callout">
+            <div class="">
+              Hash: <a href="{% url 'redirect_to_long_url' pk=url.pk %}">{{ url.url_short }}</a>
+            </div>
+            <div class="url_long">
+              url originale: <a href="{{ url.url_long }}">{{ url.url_long }}</a>
+            </div>
+            <div class="date">
+              Date de création: {{ url.created_date }}
+            </div>
+            <div class="number">
+              {% if url.redirect_number > 1 %}
+                Nombre de clics: {{ url.redirect_number }}
+              {% else %}
+              Nombre de clic: {{ url.redirect_number }}
+              {% endif %}
+            </div>
+            {% if url.nickname %}
+            <div class="nickname">
+              Pseudo: {{ url.nickname }}
+            </div>
+            {% endif %}
+          </div>
+        {% empty %}
+          <span class="warning label">
+            No url are available.
+          </span>
         {% endfor %}
-      </div>
-    {% endif %}
-    {% for url in urls %}
-      <h4><a href="{% url 'redirect_to_long_url' pk=url.pk %}">{{ url.url_short }}</a></h4>
-      <div class="url_long">
-        {{ url.url_long }}
-      </div>
-      <div class="date">
-        {{ url.created_date }}
-      </div>
-      <div class="number">
-        {{ url.redirect_number }}
-      </div>
-      {% if url.nickname %}
-        <div class="nickname">
-          {{ url.nickname }}
-        </div>
       {% endif %}
-    {% empty %}
-      <div class="">
-        No url are available.
-      </div>
-    {% endfor %}
-  {% endif %}
+    </div>
+  </div>
 {% endblock %}

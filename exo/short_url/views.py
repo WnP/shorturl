@@ -27,17 +27,22 @@ class CreateShortURLView(FormView):
 
         self.last_created_id = obj.id
 
-        message = '<h1><a href="{}">{}</a></h1>' \
+        message = '<div class="callout primary">' \
+            '<div class="">' \
+            'Hash: <a href="{0}">{1}</a>' \
+            '</div>' \
             '<div class="url_long">' \
-            '{}' \
+            'url originale: <a href="{2}">{2}</a>' \
             '</div>' \
             ''.format(obj.id,
                       obj.url_short,
                       obj.url_long,)
         if obj.nickname is not None:
-            message += '<div class="{1}">' \
-                '{1}' \
+            message += '<div class="nickname">' \
+                'Pseudo: {}' \
                 '</div>'.format(obj.nickname)
+
+        message += '</div>'
         messages.info(self.request, message)
 
         return super(CreateShortURLView, self).form_valid(form)

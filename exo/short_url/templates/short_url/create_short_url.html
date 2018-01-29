@@ -1,10 +1,13 @@
 {% extends 'short_url/base.html' %}
 
 {% block content %}
-  <h1>Nouveau raccourci</h1>
-  <form class="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="">Enregistrer</button>
-  </form>
+  <div class="container">
+    <div class="main">
+      <form class="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button" class="">Enregistrer</button>
+      </form>
+    </div>
+  </div>
 {% endblock %}

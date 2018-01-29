@@ -1,13 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <title>short url</title>
     <link rel="stylesheet" type="text/css" href="{% static 'short_url/style.css' %}" />
   </head>
   <body>
+    <div class="title-bar">
+      <span class="title-bar-title">Bienvenue sur short url</span>
+    </div>
+
     {% block content %}
     {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js" crossorigin="anonymous"></script>
   </body>
 </html>
