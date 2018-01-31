@@ -7,6 +7,7 @@ venv/
 ENV/
 htmlcov/
 .coverage
+exo/short_url/static/short_url/*.css
 
 [Bb]in
 [Ii]nclude
