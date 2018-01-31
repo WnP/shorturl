@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'short_url',
     'compressor',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# SASS_PROCESSOR_INCLUDE_DIRS = [
+#     os.path.join(PROJECT_DIR, 'scss'),
+# ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

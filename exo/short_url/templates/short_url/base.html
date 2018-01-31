@@ -4,7 +4,10 @@
   <head>
     <meta charset="utf-8">
     <title>short url</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'short_url/style.css' %}" />
+    {% load compress %}
+    {% compress css %}
+      <link rel="stylesheet" type="text/css" href="{% static 'short_url/style.css' %}" />
+    {% endcompress %}
   </head>
   <body>
     <div class="title-bar">
@@ -13,6 +16,8 @@
 
     {% block content %}
     {% endblock %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js" crossorigin="anonymous"></script>
+    <!-- {% compress js %} -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js" crossorigin="anonymous"></script>
+    <!-- {% endcompress %} -->
   </body>
 </html>
