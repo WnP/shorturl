@@ -1,28 +1,37 @@
+project_name = exo
+app = short_url
+
 venv:
 	python3 -m venv venv
 	./venv/bin/pip install -r requirements.txt
 
+startProject:
+	./venv/bin/django-admin startproject $(project_name)
+
+foundation:
+	cd $(project_name) && yarn init --yes && yarn add -D foundation-sites@6.4.3
+
 migrate:
-	./venv/bin/python ./exo/manage.py migrate
+	./venv/bin/python ./$(project_name)/manage.py migrate
 
 run:
-	./venv/bin/python ./exo/manage.py runserver
+	./venv/bin/python ./$(project_name)/manage.py runserver
 
 superuser:
-	./venv/bin/python ./exo/manage.py createsuperuser
+	./venv/bin/python ./$(project_name)/manage.py createsuperuser
 
-init: venv migrate superuser run
+init: venv startProject migrate superuser foundation
 
 version:
-	./venv/bin/python ./exo/manage.py version
+	./venv/bin/python ./$(project_name)/manage.py version
 
 test:
-	./venv/bin/python ./exo/manage.py test short_url
+	./venv/bin/python ./$(project_name)/manage.py test $(app)
 
 coverage:
-	./venv/bin/coverage run --source='./exo' ./exo/manage.py test short_url
+	./venv/bin/coverage run --source='./$(project_name)' ./$(project_name)/manage.py test $(app)
 	./venv/bin/coverage html
 	xdg-open htmlcov/index.html&
 
 sprunge:
-	./venv/bin/python ./exo/manage.py test short_url  |& curl -F 'sprunge=<-' http://sprunge.us
+	./venv/bin/python ./$(project_name)/manage.py test $(app)  |& curl -F 'sprunge=<-' http://sprunge.us
