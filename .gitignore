@@ -8,10 +8,10 @@ ENV/
 htmlcov/
 .coverage
 exo/package-lock.json
-exo/node_modules/
+exo/short_url/node_modules/
 exo/short_url/static/short_url/*.css
-todo
 *.lock
+todo
 
 [Bb]in
 [Ii]nclude

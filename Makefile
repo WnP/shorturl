@@ -9,7 +9,8 @@ startProject:
 	./venv/bin/django-admin startproject $(project_name)
 
 foundation:
-	cd $(project_name) && yarn init --yes && yarn add -D foundation-sites@6.4.3
+	mkdir -p $(project_name)/$(app)
+	cd $(project_name)/$(app) && yarn init --yes && yarn add -D foundation-sites@6.4.3
 
 migrate:
 	./venv/bin/python ./$(project_name)/manage.py migrate
