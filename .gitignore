@@ -7,6 +7,8 @@ venv/
 ENV/
 htmlcov/
 .coverage
+exo/package-lock.json
+exo/node_modules/
 exo/short_url/static/short_url/*.css
 
 [Bb]in
