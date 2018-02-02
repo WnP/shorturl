@@ -102,10 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# SASS_PROCESSOR_INCLUDE_DIRS = [
-#     os.path.join(PROJECT_DIR, 'scss'),
-# ]
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -124,4 +120,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, '')
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+    'sass_processor.finders.CssFinder',
+]
+
+COMPRESS_OUTPUT_DIR = 'compressed'
+COMPRESS_OFFLINE = True
+# COMPRESS_ENABLED = True
+
+
+# SASS_PROCESSOR_INCLUDE_DIRS = [
+#     os.path.join(PROJECT_DIR, 'short_url/scss'),
+#     os.path.join(PROJECT_DIR, 'short_url/node_modules/foundation-sites'),
+# ]

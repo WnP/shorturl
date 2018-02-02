@@ -11,6 +11,8 @@ startProject:
 foundation:
 	mkdir -p $(project_name)/$(app)
 	cd $(project_name)/$(app) && yarn init --yes && yarn add -D foundation-sites@6.4.3
+	mkdir -p $(project_name)/$(app)/js
+	mkdir -p $(project_name)/$(app)/scss
 
 migrate:
 	./venv/bin/python ./$(project_name)/manage.py migrate
