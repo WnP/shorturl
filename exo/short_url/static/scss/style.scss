@@ -1,8 +1,13 @@
 @charset 'utf-8';
 
-@import 'settings';
+// @import 'settings';  // where is that file?
+// You should get a base version of foundation default settings and copy it
+// at the same level this file is
+// Spoiler: default version of this file is located:
+// exo/short_url/node_modules/foundation-sites/scss/settings/ <- here
 @import 'foundation';
-@import 'motion-ui';
+// in order to use motion ui you should install it… like foundation
+// @import 'motion-ui';
 
 @include foundation-global-styles;
 //@include foundation-grid;
@@ -51,8 +56,9 @@
 
 // @include foundation-prototype-classes;
 
-@include motion-ui-transitions;
-@include motion-ui-animations;
+// in order to use motion ui you should install it… like foundation
+// @include motion-ui-transitions;
+// @include motion-ui-animations;
 
 .container {
   @include grid-row;

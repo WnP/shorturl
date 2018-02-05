@@ -129,12 +129,19 @@ STATICFILES_FINDERS = [
     'sass_processor.finders.CssFinder',
 ]
 
+# Enabled CSS compression filters
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.cssmin.rCSSMinFilter',
+    'django_compressor_autoprefixer.AutoprefixerFilter',
+]
+
 COMPRESS_OUTPUT_DIR = 'compressed'
 COMPRESS_OFFLINE = True
 # COMPRESS_ENABLED = True
 
 
-# SASS_PROCESSOR_INCLUDE_DIRS = [
-#     os.path.join(PROJECT_DIR, 'short_url/scss'),
-#     os.path.join(PROJECT_DIR, 'short_url/node_modules/foundation-sites'),
-# ]
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(PROJECT_DIR, 'short_url/node_modules/foundation-sites/scss'),
+]
+SASS_PRECISION = 8
